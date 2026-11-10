@@ -1,0 +1,11 @@
+* text=auto
+*.py text eol=lf
+*.csv text eol=lf
+*.json text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.md text eol=lf
+*.pdf binary
+*.tif binary
+# Preserve byte-for-byte SHA-256 checksums for archived run records.
+experiments/records/*.json -text

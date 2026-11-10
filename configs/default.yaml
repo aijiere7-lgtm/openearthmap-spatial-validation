@@ -1,0 +1,304 @@
+# ---------------------------------------------------------------------------
+# default.yaml — master configuration
+#
+# All paths are RELATIVE TO PROJECT_ROOT. No absolute paths are hard-coded in
+# code or config (research_protocol.md §17).
+#
+# Changing a value here that is also fixed in research_protocol.md constitutes a
+# protocol change and must be logged in DECISIONS.md.
+# ---------------------------------------------------------------------------
+
+project:
+  name: "spatial-partitioning-accuracy-generalization"
+  protocol_version: "1.0"
+  protocol_frozen: "2026-09-17"
+
+dataset:
+  name: "OpenEarthMap"
+  version: "v1-zenodo7223446-mirror"
+  n_classes: 8
+  class_names:
+    - Bareland
+    - Rangeland
+    - Developed space
+    - Road
+    - Tree
+    - Water
+    - Agriculture land
+    - Building
+  # Label integer encoding, ESTABLISHED from the authors' code and corroborated
+  # statistically (DECISIONS D-022). The label raster value is NOT the class
+  # index: raster value = class index + 1, and raster value 0 is a residual
+  # "unknown" category. Reading the raster as class indices would delete every
+  # Building pixel (raster 8) from all metrics and report "unknown" as Bareland.
+  label_encoding:
+    raster_value_unknown: 0
+    raster_value_of_class_k: "k + 1"
+    ignore_index: 255          # NOT 0: 0 would mark every Bareland pixel as ignore
+    official_baseline_n_classes: 9   # the authors' baseline counts "unknown"
+  # Expected properties, used ONLY as cross-checks. Divergence triggers review,
+  # it is not silently accepted.
+  #
+  # The audited distribution differs from the paper's nominal figures, and the
+  # difference is FULLY EXPLAINED rather than absorbed (DECISIONS D-020):
+  #   * xBD RGB imagery is not redistributed: 1,162 tiles, and 5000 - 1162 = 3838.
+  #   * Official test labels are withheld for CodaLab scoring: 0 of 1,500 test
+  #     tiles carry a label, and 3000 + 500 = 3500.
+  # Both counts close exactly. Gates compare against `audited_release`, never
+  # against the nominal figures.
+  expected:
+    # --- as published in the dataset paper ---
+    n_images_nominal: 5000
+    image_size_nominal: 1024
+    n_regions_nominal: 97
+    n_countries_nominal: 44
+    # --- as measured in the distributed release ---
+    audited_release:
+      n_images: 3838
+      n_labels: 3500
+      n_usable: 2687           # images INTERSECT labels
+      n_region_dirs: 97
+      n_regions_with_imagery: 75
+      n_regions_eligible: 74   # >= MIN_USABLE_TILES_PER_REGION (4) usable tiles
+      n_xbd_tiles: 1162
+      n_regions_all_xbd: 22
+      split_sizes: {train: 3000, val: 500, test: 1500}
+      official_test_labels_available: false
+      # Image size is NOT uniform: 1,091 of 3,838 tiles are not 1024x1024
+      # (1000x1000, 900x900, 650x650, 958x1024, 439x406 ...). The inventory gate
+      # therefore checks internal consistency (image vs label size), not equality
+      # with 1024. See DECISIONS D-023.
+      n_images_off_nominal_size: 1091
+      # Ground sample distance, measured per tile from the raster header.
+      # 3,438 tiles carry a projected CRS: GSD is exactly 0.25 / 0.3 / 0.4986 /
+      # 0.5 m. 400 tiles carry a geographic CRS, where the pixel is square in
+      # DEGREES, so the ground footprint is foreshortened east-west by
+      # cos(latitude): at 49 N that is 0.197 m east-west by 0.299 m north-south.
+      gsd_m_projected_range: [0.25, 0.5]
+      gsd_m_geographic_range: [0.197, 0.461]
+      n_distinct_crs: 36
+
+paths:
+  raw: "data/raw"
+  interim: "data/interim"
+  processed: "data/processed"
+  metadata: "data/metadata"
+  splits: "data/splits"
+  results: "results"
+  logs: "logs"
+  checkpoints: "checkpoints"
+  experiments: "experiments"
+
+qc:
+  # 1024x1024 images are read in full for hashing; streaming is used for
+  # statistics so the corpus never enters memory (15.82 GB RAM constraint).
+  compute_sha256: true
+  compute_perceptual_hash: true
+  phash_size: 16            # 16x16 -> 256-bit pHash
+  phash_near_duplicate_hamming: 6   # threshold; justify empirically at QC
+  sample_label_histograms: true
+  detect_corrupt: true
+
+spatial:
+  # Coordinate tier is DETERMINED EMPIRICALLY (protocol §5, DECISIONS D-009).
+  # Allowed values: T1 | T2 | T3 | null (= determine at runtime)
+  coordinate_tier: null
+  # Moran's I spatial weights
+  weights:
+    type: "knn"             # knn | distance_band
+    k: 8
+    distance_band: null
+    row_standardise: true
+  moran_permutations: 999
+  variogram:
+    enabled: true
+    n_lags: 20
+    max_lag_fraction: 0.5   # of the maximum observed pairwise distance
+    models: ["spherical", "exponential", "gaussian"]
+
+external_test:
+  # Selection is deterministic, seeded, and performance-blind (protocol §6).
+  seed: 20260917
+  target_n_regions: [12, 15]     # algorithm returns within this band
+  stratify_by: "continent"
+  min_class_presence_px: 1000    # hard filter: region must contain this many px of every class
+  # A region must also carry enough tiles to serve as a test set. Three tiles
+  # (~3M px) satisfy the class-presence filter but cannot support a meaningful
+  # external evaluation. Dormant today: no class-filter passer has fewer than 8
+  # tiles. Present so that lowering min_class_presence_px cannot silently select
+  # a region of three tiles.
+  min_tiles_per_region: 4
+  maximise_min_distance: true
+  freeze: true                   # once written, external_regions.json is read-only
+
+splits:
+  seed: 42
+  strategies:
+    - id: S0
+      name: "random_patch"
+      enabled: true
+    - id: S1
+      name: "group_scene"
+      enabled: true
+    - id: S2
+      name: "spatial_block"
+      enabled: true
+      block_size_mults: [0.5, 1.0, 2.0]    # multiples of the estimated range r
+      block_size_fallback_m: null          # used only under tier T3
+    - id: S3
+      name: "buffered_spatial_block"
+      enabled: true
+      buffer_size_mults: [0.5, 1.0, 2.0]
+      buffer_size_fallback_m: null
+    - id: S4
+      name: "leave_one_region_out"
+      enabled: true
+  n_folds: 5
+  # Matched-sample-size control is MANDATORY (protocol §8.2)
+  matched_sample_size:
+    enabled: true
+    n_repeats: 5
+
+models:
+  - id: M1
+    name: "unet_resnet34"
+    arch: "Unet"
+    encoder: "resnet34"
+    encoder_weights: "imagenet"
+  - id: M2
+    name: "deeplabv3plus"
+    arch: "DeepLabV3Plus"
+    encoder: "resnet50"
+    encoder_weights: "imagenet"
+  - id: M3
+    name: "segformer_b0"
+    arch: "SegFormer"
+    hf_model: "nvidia/mit-b0"
+    encoder_weights: "imagenet"
+
+training:
+  # Held IDENTICAL across models except where VRAM forces a recorded exception
+  # (protocol §10, §11).
+  seeds: [42, 1337, 2024, 7, 17]
+  crop_size: 512
+  batch_size: 8
+  # ---------------------------------------------------------------------
+  # EPOCH BUDGET: 60 -> 20. Recorded as DECISIONS D-040.
+  #
+  # This is a POST-MEASUREMENT change, made before any grid result existed.
+  # research_protocol.md section 11 fixes "a fixed budget with early stopping";
+  # it does not name the number, so the number lives here.
+  #
+  # 60 was a planning figure that had never been costed on this hardware.
+  # scripts/benchmark_throughput.py now measures the real inner loop on the real
+  # fold-0 training frame at batch 8 / 512 px:
+  #     M1 (U-Net resnet34)   62.5 s/epoch  -> 1.04 h per 60-epoch run
+  #     M2 (DeepLabV3+ r50)   78.4 s/epoch  -> 1.31 h
+  #     M3 (SegFormer-B0)     54.3 s/epoch  -> 0.90 h
+  # The grid is GPU-compute-bound, not I/O-bound: the same loader delivers an
+  # epoch in 16.1 s on 4 workers (10.9 s on 8), i.e. well below the compute cost.
+  # The protocol's full 29 x 3 x 5 = 435-run grid at 60 epochs therefore costs
+  # a measured 471.9 h = 19.7 days on this single RTX 4060.
+  #
+  # 20 epochs brings a run to ~0.36 h and makes the protocol's P0 priority
+  # ladder (section 15) executable inside this project's available GPU time,
+  # which is the ladder's stated purpose: "the completed subset must remain a
+  # coherent, reportable study if execution is truncated".
+  #
+  # CONSEQUENCE, DISCLOSED RATHER THAN BURIED: the models are trained for a
+  # third of the planned budget and are therefore undertrained relative to a
+  # converged solution. The cosine schedule in `training.engine` is built from
+  # this value, so the schedule itself is self-consistent, and the epoch count is
+  # identical for every strategy, model and seed, so the partition comparison is
+  # unaffected in its treatment; the absolute accuracy levels are not
+  # comparable to published OpenEarthMap baselines.
+  # ---------------------------------------------------------------------
+  epochs: 20
+  optimizer: "AdamW"
+  lr: 0.0001
+  weight_decay: 0.0001
+  scheduler: "cosine"
+  warmup_epochs: 3
+  loss:
+    type: "ce_dice"
+    ce_weight: 1.0
+    dice_weight: 1.0
+  early_stopping:
+    monitor: "val_miou"
+    mode: "max"
+    patience: 10
+  amp: true
+  # ---------------------------------------------------------------------
+  # 4 -> 2. Recorded as DECISIONS D-043.
+  #
+  # The grid failed on its first six runs with
+  #   MemoryError: Unable to allocate 8.00 MiB ... numpy bool, shape (8388608,)
+  # raised inside ConfusionMatrix.update() during the first epoch's validation.
+  # The allocation that failed is 8 MB: the machine (15.82 GB RAM) was at its
+  # commit limit, not short of a buffer. Each DataLoader worker holds ~1.6 GB
+  # private (torch + rasterio + albumentations baseline, plus pinned prefetch
+  # buffers for 1024x1024 tiles), so four workers cost ~6.4 GB before the
+  # training process itself, the CUDA context and the OS working set.
+  # After stopping the grid, free physical memory went 2.16 -> 7.50 GB and free
+  # commit 1.60 -> 15.16 GB, which identifies the workers as the cause.
+  #
+  # num_workers is a throughput knob, not part of the training protocol: it
+  # changes neither the data seen nor the order of optimisation steps. Measured
+  # loader cost is 16.1 s/epoch at 4 workers against 54-78 s of compute, so
+  # halving the worker count leaves data loading below the compute floor and
+  # cannot change any result -- only the wall-clock cost.
+  # ---------------------------------------------------------------------
+  # ---------------------------------------------------------------------
+  # LEFT AT 2. A change to 4 was measured on 2026-09-20 and REVERTED: with the
+  # grid running, the data loader delivered 13.2 samples/s at 2 workers and 12.6
+  # samples/s at 4, i.e. adding workers does not buy throughput here, so paying
+  # ~3.2 GB of extra commit for it would be a cost with no benefit.
+  #
+  # What the same measurement did establish is the SIZE of the loader term: the
+  # leave-one-region-out fold must read 8.39 GB of imagery and labels per epoch
+  # (6.29 GB image + 2.10 GB label), and the loader supplies an epoch in ~165 s.
+  # That is the floor on an epoch of this fold, whatever the GPU is doing. See
+  # D-056.
+  # ---------------------------------------------------------------------
+  num_workers: 2
+  augmentations:
+    # Identical across models. Deliberately conservative: strong geometric
+    # augmentation could alter the spatial semantics under study.
+    hflip: 0.5
+    vflip: 0.5
+    rot90: 0.5
+    brightness_contrast: 0.2
+    gauss_noise: null
+
+evaluation:
+  primary_metric: "miou"
+  metrics: ["miou", "macro_f1", "oa", "per_class_iou", "per_class_precision",
+            "per_class_recall", "per_class_f1"]
+  # Estimator-evaluation metrics (protocol §12.2)
+  estimator_metrics: ["OB", "AEE", "GG", "RI"]
+  batch_size: 4
+
+statistics:
+  bootstrap:
+    n_resamples: 10000
+    confidence_level: 0.95
+    method: "bca"            # percentile | bca
+    # Resampling unit MUST respect the data structure and is stated for every
+    # reported interval (protocol §13.1).
+    resample_unit: "region"  # region | patch
+  mixed_effects:
+    enabled: true
+    formula: "metric ~ strategy * model"
+    random_effect: "1|region"
+    check_assumptions: true
+  ranking:
+    metrics: ["spearman", "kendall"]
+  multiplicity:
+    primary_contrast: ["S0", "EXT"]
+    secondary_adjust: "fdr_bh"
+    fdr_alpha: 0.05
+
+logging:
+  level: "INFO"
+  save_predictions: true
+  save_training_curves: true

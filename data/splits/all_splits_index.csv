@@ -1,0 +1,10 @@
+strategy,file,n_rows,n_train_per_fold_median,n_train_per_fold_min,n_train_per_fold_max,n_val_per_fold_median,n_folds,representation,params,notes
+S0_random_patch,S0_random_patch.csv,2214,1771,1771,1772,443,5,compact,"{'n_folds': 5, 'seed': 42}",
+S2_spatial_block_0.5r,S2_spatial_block_0.5r.csv,2214,1775,1719,1819,439,5,compact,"{'block_size_km': 6.0687, 'n_folds': 5, 'seed': 42, 'derived_from_r': True, 'r_km': 12.1374, 'r_status': 'identified'}",
+S3_buffered_0.5r,S3_buffered_0.5r.csv,11070,1218,1067,1308,439,5,expanded,"{'block_size_km': 6.0687, 'buffer_km': 6.0687, 'n_folds': 5, 'seed': 42, 'representation': 'expanded (eval_fold)', 'derived_from_r': True, 'r_km': 12.1374, 'r_status': 'identified'}",
+S2_spatial_block_1r,S2_spatial_block_1r.csv,2214,1783,1701,1811,431,5,compact,"{'block_size_km': 12.1374, 'n_folds': 5, 'seed': 42, 'derived_from_r': True, 'r_km': 12.1374, 'r_status': 'identified'}",
+S3_buffered_1r,S3_buffered_1r.csv,11070,1324,1185,1413,431,5,expanded,"{'block_size_km': 12.1374, 'buffer_km': 12.1374, 'n_folds': 5, 'seed': 42, 'representation': 'expanded (eval_fold)', 'derived_from_r': True, 'r_km': 12.1374, 'r_status': 'identified'}",
+S2_spatial_block_2r,S2_spatial_block_2r.csv,2214,1761,1715,1820,453,5,compact,"{'block_size_km': 24.2748, 'n_folds': 5, 'seed': 42, 'derived_from_r': True, 'r_km': 12.1374, 'r_status': 'identified'}",
+S3_buffered_2r,S3_buffered_2r.csv,11070,1486,1271,1662,453,5,expanded,"{'block_size_km': 24.2748, 'buffer_km': 24.2748, 'n_folds': 5, 'seed': 42, 'representation': 'expanded (eval_fold)', 'derived_from_r': True, 'r_km': 12.1374, 'r_status': 'identified'}",
+S4_leave_one_region_out,S4_leave_one_region_out.csv,2214,2179,2113,2209,35,62,compact,{'n_regions': 62},
+MATCHED_S3_buffered_1r_N1324_rep0,MATCHED_S3_buffered_1r_N1324_rep0.csv,2214,1434,1324,1448,443,5,compact,"{'target_n_train': 1324, 'matched_to': 'S3_buffered_1r', 'repeat': 0, 'seed': 1042}",

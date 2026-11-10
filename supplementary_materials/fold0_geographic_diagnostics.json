@@ -1,0 +1,66 @@
+{
+  "note": "Independent NumPy computations from saved split memberships and composition; no model retraining.",
+  "S0_random_patch": {
+    "n_train": 1771,
+    "n_val": 443,
+    "minimum_km": 0.1280070644935664,
+    "median_km": 0.43447526682520504,
+    "within_0_5km_fraction": 0.582392776523702,
+    "sample_ids_intersection": 0
+  },
+  "S2_spatial_block_1r": {
+    "n_train": 1701,
+    "n_val": 513,
+    "minimum_km": 0.1668437316904993,
+    "median_km": 5.519325843441001,
+    "within_0_5km_fraction": 0.021442495126705652,
+    "sample_ids_intersection": 0
+  },
+  "S3_buffered_1r": {
+    "n_train": 1310,
+    "n_val": 513,
+    "minimum_km": 12.159029446946139,
+    "median_km": 63.33882085877815,
+    "within_0_5km_fraction": 0.0,
+    "sample_ids_intersection": 0
+  },
+  "S4_leave_one_region_out": {
+    "n_train": 2165,
+    "n_val": 49,
+    "minimum_km": 46.991823242857585,
+    "median_km": 54.27517762087968,
+    "within_0_5km_fraction": 0.0,
+    "sample_ids_intersection": 0
+  },
+  "Moran_I": {
+    "n": 2214,
+    "k": 8,
+    "values": [
+      0.30226022860009166,
+      0.4699559695995019,
+      0.5917003681404573,
+      0.5023755345151061,
+      0.4962059321993846,
+      0.20962326534718914,
+      0.5316504423458613,
+      0.560052148374333
+    ],
+    "registered": [
+      0.30226022860008667,
+      0.4699559695995018,
+      0.5917003681404573,
+      0.5023755345151061,
+      0.4962059321993853,
+      0.20962326534719128,
+      0.5316504423458676,
+      0.5600521483743324
+    ],
+    "maximum_abs_difference": 6.217248937900877e-15,
+    "mean": 0.45797798614024066,
+    "range": [
+      0.20962326534718914,
+      0.5917003681404573
+    ],
+    "permutation_p": "not recomputed; requires original permutation RNG state for exact replication"
+  }
+}

@@ -1,0 +1,10 @@
+strategy,fold,n_train,n_val,n_validation_with_geometric_overlap,fraction_validation_with_geometric_overlap,positive_overlap_pairs,max_fraction_single_train
+S0_random_patch,0,1771,443,30,0.06772009029345373,46,0.5260583094071453
+S2_spatial_block_1r,0,1701,513,0,0.0,0,0.0
+S4_leave_one_region_out,0,2165,49,0,0.0,0,0.0
+S3_buffered_1r,0,1310,513,0,0.0,0,0.0
+MATCHED_S3_buffered_1r_N1324_rep0,0,1324,443,20,0.045146726862302484,28,0.26777569979873
+S2_spatial_block_0.5r,0,1719,495,0,0.0,0,0.0
+S2_spatial_block_2r,0,1813,401,0,0.0,0,0.0
+S3_buffered_0.5r,0,1194,495,0,0.0,0,0.0
+S3_buffered_2r,0,1486,401,0,0.0,0,0.0

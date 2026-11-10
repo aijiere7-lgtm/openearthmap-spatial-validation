@@ -1,0 +1,10 @@
+protocol,training,validation,excluded,step_attempts,seeds,runs
+MATCHED_S3_buffered_1r_N1324_rep0,1324,443,447,3300,42 1337 2024,9
+S0_random_patch,1771,443,0,4420,7 17 42 1337 2024,15
+S2_spatial_block_0.5r,1719,495,0,4280,42,3
+S2_spatial_block_1r,1701,513,0,4240,7 17 42 1337 2024,15
+S2_spatial_block_2r,1813,401,0,4520,42,3
+S3_buffered_0.5r,1194,495,525,2980,42,3
+S3_buffered_1r,1310,513,391,3260,42 1337 2024,9
+S3_buffered_2r,1486,401,327,3700,42,3
+S4_leave_one_region_out,2165,49,0,5400,7 17 42 1337 2024,15

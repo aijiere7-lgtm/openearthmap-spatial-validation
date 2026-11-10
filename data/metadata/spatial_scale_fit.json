@@ -1,0 +1,61 @@
+{
+  "range": {
+    "r_km": 12.13741738186831,
+    "r_ci_km": [
+      11.666689731811248,
+      15.543638664318955
+    ],
+    "model": "spherical",
+    "fit_r2": 0.9621791514445054,
+    "per_model": {
+      "spherical": {
+        "params": {
+          "nugget": 3.1809286200316493,
+          "sill": 6.305387921667701,
+          "range_km": 13.500830366090689
+        },
+        "r2": 0.9621791514445054,
+        "error": null,
+        "identified_within_window": true
+      },
+      "exponential": {
+        "params": {
+          "nugget": 3.0220636335587217,
+          "sill": 6.9745178564280685,
+          "range_km": 23.376513962086186
+        },
+        "r2": 0.9386306732942108,
+        "error": null,
+        "identified_within_window": false
+      },
+      "gaussian": {
+        "params": {
+          "nugget": 3.5086172076598925,
+          "sill": 6.267327222479906,
+          "range_km": 10.774004397645932
+        },
+        "r2": 0.9570756484888088,
+        "error": null,
+        "identified_within_window": true
+      }
+    },
+    "stable": true,
+    "note": "range is stable across the tested variogram models; 1 of 3 models were EXCLUDED from the interval because their fitted range reaches or exceeds the last fitted lag (17.57 km), i.e. they had not attained their sill inside the window and are extrapolations: ['exponential']"
+  },
+  "distance_metric": "geodesic_haversine",
+  "distance_scale_unit": "sample",
+  "curve_within_region": {
+    "n_pairs_total": 49381,
+    "upper_km": 28.115193526287456,
+    "bin_width_km": 1.4057596763143727,
+    "n_bins": 20,
+    "exhaustive": true
+  },
+  "morans_i_summary": {
+    "n_features": 8,
+    "mean": 0.45797798614024104,
+    "min": 0.20962326534719128,
+    "max": 0.5917003681404573,
+    "n_significant_p05": 8
+  }
+}

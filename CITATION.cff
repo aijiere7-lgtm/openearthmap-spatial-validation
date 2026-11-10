@@ -1,0 +1,15 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite this version."
+type: software
+title: "OpenEarthMap spatial validation"
+version: "1.0.0"
+authors:
+  - family-names: Jiang
+    given-names: Fengjun
+license: MIT
+abstract: "Archived experiment records and reproducibility code for comparing accuracy estimates and model selection on OpenEarthMap."
+keywords:
+  - OpenEarthMap
+  - spatial validation
+  - semantic segmentation
+  - reproducibility
