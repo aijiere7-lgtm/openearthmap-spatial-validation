@@ -12,7 +12,7 @@ Scope is the local v1.0.0 candidate. Validation used Python 3.12 on Windows. No 
 | Relative corpus paths | Pass | python tests/test_root_resolution.py passed 26 checks using a writable temporary directory. Includes nested layouts, invalid roots and relative paths. |
 | Figure and table regeneration | Pass | Six generated PDF/TIFF files were byte-identical to the RAET figure files. Both main CSV tables matched every corresponding Word table cell. The supplementary HTML matched the RAET delivery byte for byte. |
 | Archive contents | Pass | The staged tree and committed version are scanned for known token and key patterns, absolute workstation paths, author contact fields, raw-data locations, binaries other than the six output figures and other prohibited files. Exact derived tile locations are documented for release review. |
-| Citation metadata | Basic fields checked | CITATION.cff includes software type, title, version, MIT licence and the sole confirmed software creator. Full external schema validation and permanent public identifiers remain pending. |
+| Citation metadata | Basic fields checked | CITATION.cff includes software type, title, version, MIT licence and the sole confirmed software creator. Zenodo ingested the citation metadata and registered the version DOI with Fengjun Jiang as sole creator. |
 | Historical dependency mapping | Declared | External imports were inventoried against requirements-training.txt, with the figure-only PDF dependencies in requirements.txt. Resolution of the archived training stack was outside the lightweight environment test. |
 
 ## Historical checks with incomplete runtime coverage

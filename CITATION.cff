@@ -3,6 +3,13 @@ message: "If you use this software, please cite this version."
 type: software
 title: "OpenEarthMap spatial validation"
 version: "1.0.0"
+date-released: "2026-11-10"
+doi: "10.5281/zenodo.24097999"
+repository-code: "https://github.com/aijiere7-lgtm/openearthmap-spatial-validation"
+identifiers:
+  - type: doi
+    value: "10.5281/zenodo.24097998"
+    description: "Zenodo concept DOI for all versions"
 authors:
   - family-names: Jiang
     given-names: Fengjun

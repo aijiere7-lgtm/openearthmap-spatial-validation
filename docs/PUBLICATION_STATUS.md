@@ -1,26 +1,17 @@
 # Publication status
 
-**PENDING — public release authorised, remote publication to be verified.**
+**Published and archived on 2026-11-10.**
 
-| Item | State |
+| Item | Verified result |
 |---|---|
-| Local Git repository, initial commit and v1.0.0 tag | Local |
-| GitHub authentication | Read-only account lookup succeeded |
-| Public repository, push and GitHub Release | Authorised. Remote repository and Release not yet verified. |
-| Zenodo GitHub integration | Not verified for a remote repository. Authorise the integration and enable the repository before creating the GitHub Release. |
-| Zenodo software record, version DOI and concept DOI | Pending successful archiving |
-| Independent derived-data record and DOI | Independent deposit pending. |
-| Manuscript links and references | Pending verified repository links and real DOIs |
+| Repository | [Public GitHub repository](https://github.com/aijiere7-lgtm/openearthmap-spatial-validation) |
+| Release | [v1.0.0](https://github.com/aijiere7-lgtm/openearthmap-spatial-validation/releases/tag/v1.0.0) |
+| Release commit | e7dc7a44e97355c2846506f5891c2ca2b5d7a1bf |
+| Software creator | Fengjun Jiang |
+| Software licence | MIT |
+| Zenodo record | [24097999](https://zenodo.org/records/24097999) |
+| Software version DOI | [10.5281/zenodo.24097999](https://doi.org/10.5281/zenodo.24097999) |
+| Software concept DOI | [10.5281/zenodo.24097998](https://doi.org/10.5281/zenodo.24097998) |
+| Independent dataset record | No separate dataset DOI. The software archive contains the derived analysis data alongside the code. |
 
-## Approved release scope
-
-The author approved public release of the prepared repository, with Fengjun Jiang as sole software creator. The original software uses the previously proposed MIT licence. The release includes the derived metrics, class summaries, spatial diagnostics and exact tile centroid coordinates and memberships. Raw imagery, labels, weights and prediction rasters are excluded. Source dataset terms continue to apply. The Git commit uses a neutral archival identity. Repository access and archive identifiers are reported only after verification.
-
-## Release and deposit sequence
-
-1. Verify the approved licence, creator metadata and data scope. Ensure the release tag resolves to the approved revision.
-2. Create the public GitHub repository, push the reviewed branch and tag, verify the remote tree, and connect the repository in [Zenodo's GitHub integration](https://zenodo.org/account/settings/github/) before publishing the GitHub Release. Zenodo can read supported metadata from CITATION.cff. A separate .zenodo.json is unnecessary for this staged release.
-3. Publish GitHub Release v1.0.0 with the reviewed release notes. Verify the GitHub Release and that Zenodo preserved the expected files. Resolve the software version and concept DOIs to the correct records. If derived data are deposited separately, verify that record and its distinct DOI.
-4. Add the verified repository and DOI links to README and CITATION.cff in a follow-up commit. Add the software version and separate data citations to the paper and recheck its anonymous copy, page layout and references. Keep software and data DOIs distinct.
-
-[GitHub archiving instructions](https://docs.github.com/en/repositories/archiving-a-github-repository/referencing-and-citing-content) · [Zenodo software metadata](https://help.zenodo.org/docs/github/describe-software/) · [OpenEarthMap source licences](https://github.com/bao18/open_earth_map#license)
+The archived release contains the 75 run records, nine executed partition settings, geographic reference definition, derived metrics, reproducibility scripts and figures. Source imagery, label rasters, predictions and weights are outside this archive. The original imagery and labels are available through OpenEarthMap. Dataset terms continue to apply. The release tag retains the exact original snapshot. DOI links were added to the default branch after archival.
